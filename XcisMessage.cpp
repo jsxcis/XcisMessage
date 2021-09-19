@@ -30,11 +30,11 @@ void XcisMessage::sayHello()
   */
   return;
 }
-void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t sensorType, uint8_t command, uint8_t *paydata)
+void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata)
 {
   Serial.println("XcisMessage::createMessage");
   this->message.setLocationID(locationID);
-  this->message.setSensorType(sensorType);
+  this->message.setDeviceType(deviceType);
   this->message.setCommand(command);
   // Copy payload into message payload
   //memcpy(this->payload, paydata, sizeof(payload));
@@ -57,6 +57,7 @@ void XcisMessage::processMessage(uint8_t *data)
   // Payload is stored here - can now process.
   dumpHex(this->payload,28);
 }
+
 void XcisMessage::dumpHex(void *p, size_t size )
 {
   unsigned char *bytes = (unsigned char *)p;

@@ -4,7 +4,7 @@ Message::Message()
 {
     Serial.println("Message::Constructor");
     mess.locationID = 0x00;
-    mess.sensorType = 0x00;
+    mess.deviceType = 0x00;
     mess.command = 0x00;
     for (int i = 0; i < sizeof(mess.payload); i++ )
     {
@@ -33,8 +33,8 @@ void Message::getBuffer(uint8_t *buffer)
     memmove(&buffer[used], &mess.locationID, sizeof(mess.locationID));
     used += sizeof(mess.locationID);
 
-    memmove(&buffer[used], &mess.sensorType, sizeof(mess.sensorType));
-    used += sizeof(mess.sensorType);
+    memmove(&buffer[used], &mess.deviceType, sizeof(mess.deviceType));
+    used += sizeof(mess.deviceType);
 
     memmove(&buffer[used], &mess.command, sizeof(mess.command));
     used += sizeof(mess.command);
@@ -61,7 +61,7 @@ void Message::displayMessage()
 {
     Serial.print("Message:");
     Serial.print(mess.locationID,HEX);
-    Serial.print(mess.sensorType,HEX);
+    Serial.print(mess.deviceType,HEX);
     Serial.print(mess.command,HEX);
     for (int i = 0; i < sizeof(mess.payload); i++ )
     {
