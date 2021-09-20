@@ -8,7 +8,7 @@ XcisMessage::XcisMessage()
 {
   // Constructor
   
-  Serial.println("XcisMessage::Constructor");
+  //Serial.println("XcisMessage::Constructor");
  
 
 }
@@ -32,7 +32,7 @@ void XcisMessage::sayHello()
 }
 void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata)
 {
-  Serial.println("XcisMessage::createMessage");
+  //Serial.println("XcisMessage::createMessage");
   this->message.setLocationID(locationID);
   this->message.setDeviceType(deviceType);
   this->message.setCommand(command);
@@ -42,7 +42,6 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
   // Can do direct copy provided size is set
   this->message.setPayload(paydata,28);
   this->message.setCrc(0x45);
-  this->message.displayMessage();
   // Convert the message structure into a buffer
   this->message.getBuffer(this->buffer);
   // Copy the buffer into the incoming user buffer
@@ -50,12 +49,12 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
 }
 void XcisMessage::processMessage(uint8_t *data)
 {
-  Serial.println("XcisMessage::processMessage");
+  //Serial.println("XcisMessage::processMessage");
   this->message.processBuffer(data);
   // check the payload
   this->message.getPayload(this->payload);
   // Payload is stored here - can now process.
-  dumpHex(this->payload,28);
+  //dumpHex(this->payload,28);
 }
 
 void XcisMessage::dumpHex(void *p, size_t size )

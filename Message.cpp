@@ -2,7 +2,7 @@
 #include "Message.h"
 Message::Message()
 {
-    Serial.println("Message::Constructor");
+    //Serial.println("Message::Constructor");
     mess.locationID = 0x00;
     mess.deviceType = 0x00;
     mess.command = 0x00;
@@ -11,8 +11,8 @@ Message::Message()
         mess.payload[i] = 0;
     }
     mess.crc = 0x00;
-    Serial.print("Message size:");
-    Serial.println(sizeof(mess));
+    //Serial.print("Message size:");
+    //Serial.println(sizeof(mess));
 }
 void Message::sayHello()
 {
@@ -48,14 +48,8 @@ void Message::getBuffer(uint8_t *buffer)
 }
 void Message::processBuffer(uint8_t *buffer)
 {
-    Serial.println("Message::processBuffer");
-    dumpHex(buffer,32);
-    used = 0;
-    
+    //Serial.println("Message::processBuffer");
     memcpy(&mess, buffer,sizeof(mess));
-    used += sizeof(mess);
-    
-    displayMessage();
 }
 void Message::displayMessage()
 {
