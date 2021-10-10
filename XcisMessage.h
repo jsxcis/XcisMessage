@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #include "Message.h"
 
+
+
 // Device TYPES
 #define TANK                0x01
 #define TROUGH              0x02
@@ -16,6 +18,7 @@
 #define FLOW_METER          0x09
 #define NEW                 0x10
 #define UNDEFINED           0x11
+#define GATEWAY             0x12
 
 // COMMAND TYPES
 #define SENSOR_DATA_REQUEST     0x01
@@ -38,7 +41,14 @@ class XcisMessage
     public:
     XcisMessage();
     void sayHello();
+    void resetPayload();
+
+    void createCommandPayload( uint8_t command, uint8_t nodeId);
+    void createPulseCounterPayload( uint8_t command, uint16_t battery, uint8_t value, uint32_t timestamp);
+    void processPulseCounterPayload(pulse_counter &pcm);
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);
+    void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command);
+
     void processMessage(uint8_t *data);
     void dumpHex(void *p, size_t size);
 
@@ -50,6 +60,7 @@ class XcisMessage
     uint8_t payload[28];
     uint8_t buffer[32];
     Message message;
+    size_t used;
     private:
    
 };

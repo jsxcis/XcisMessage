@@ -2,6 +2,17 @@
 #define Message_h
 
 #include "Arduino.h"
+// Gateway payload
+    struct{
+        uint8_t gatewayID;
+    } sensor_data_request;
+
+    // Pulse counter payload
+    typedef struct{
+        uint16_t battery;
+        uint8_t value;
+        uint32_t timestamp;
+    } pulse_counter;
 
 struct Message
 {
@@ -11,7 +22,7 @@ struct Message
     void displayMessage();
     void dumpHex(void *p, size_t size);
     
-    // Message contents
+    // Base Message contents
     struct{
         uint8_t locationID;
         uint8_t deviceType;
@@ -19,6 +30,7 @@ struct Message
         uint8_t payload[28];
         uint8_t crc;
     } mess;
+
 
     size_t used;
     
