@@ -10,7 +10,7 @@
     // Pulse counter payload
     typedef struct{
         uint16_t battery;
-        uint8_t value;
+        uint16_t value;
         uint32_t timestamp;
     } pulse_counter;
 
@@ -58,6 +58,8 @@ struct Message
 
       void getBuffer(uint8_t *buffer);
       void processBuffer(uint8_t *buffer);
+
+      
 
 };
 #endif

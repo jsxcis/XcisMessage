@@ -40,14 +40,14 @@ void XcisMessage::sayHello()
   */
   return;
 }
-void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, uint8_t value, uint32_t timestamp )
+void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, uint16_t value, uint32_t timestamp )
 {
   Serial.print("XcisMessage::createPulseCounterPayload");
   pulse_counter pcm;
   if (command == SENSOR_DATA_RESPONSE)
   {
     pcm.battery = __builtin_bswap16(battery); // Make sure we use byte order swap for 16 and 32 bit values
-    pcm.value = value;
+    pcm.value = __builtin_bswap16(value);
     pcm.timestamp =  __builtin_bswap32(timestamp);
     // now convert to an array
     this->resetPayload();
@@ -70,6 +70,7 @@ void XcisMessage::processPulseCounterPayload(pulse_counter &pcm)
  {
        memmove(&pcm,this->payload,sizeof(pulse_counter));
        pcm.battery =  __builtin_bswap16(pcm.battery);
+       pcm.value = __builtin_bswap16(pcm.value);
        pcm.timestamp = __builtin_bswap32(pcm.timestamp);
  }
 void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)

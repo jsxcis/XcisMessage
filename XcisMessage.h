@@ -4,21 +4,17 @@
 #include "Arduino.h"
 #include "Message.h"
 
-
+#define XCIS_RH_MESH_MAX_MESSAGE_LEN  32
 
 // Device TYPES
-#define TANK                0x01
-#define TROUGH              0x02
-#define PULSE_COUNTER       0x03
-#define LEVEL_MEASURE       0x04
-#define BORE_CONTROLLER     0x05
-#define WEATHER_SENSOR      0x06
-#define RAIN_GAUGE          0x07
-#define FENCE               0x08
-#define FLOW_METER          0x09
-#define NEW                 0x10
-#define UNDEFINED           0x11
-#define GATEWAY             0x12
+#define TANK                0x00
+#define TROUGH              0x01
+#define BORE_CONTROLLER     0x02
+#define WEATHER_SENSOR      0x03
+#define RAIN_GAUGE          0x04
+#define FENCE               0x05
+#define FLOW_METER          0x06
+
 
 // COMMAND TYPES
 #define SENSOR_DATA_REQUEST     0x01
@@ -44,7 +40,7 @@ class XcisMessage
     void resetPayload();
 
     void createCommandPayload( uint8_t command, uint8_t nodeId);
-    void createPulseCounterPayload( uint8_t command, uint16_t battery, uint8_t value, uint32_t timestamp);
+    void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t timestamp);
     void processPulseCounterPayload(pulse_counter &pcm);
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command);
@@ -61,7 +57,13 @@ class XcisMessage
     uint8_t buffer[32];
     Message message;
     size_t used;
+    inline void setOrigin(uint8_t nNewValue ){
+          this->origin = nNewValue;}
+    inline uint8_t getOrigin() {
+          return this->origin;}
+
     private:
+    uint8_t origin;
    
 };
 
