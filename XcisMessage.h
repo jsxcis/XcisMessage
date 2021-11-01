@@ -14,6 +14,7 @@
 #define RAIN_GAUGE          0x04
 #define FENCE               0x05
 #define FLOW_METER          0x06
+#define GATEWAY             0x07
 
 
 // COMMAND TYPES
@@ -31,6 +32,8 @@
 #define DEFAULT_SENSOR          0x12
 #define SET_GPS_LOCATION        0x13
 #define GET_GPS_DATA            0x14
+#define STATUS_REQUEST          0x15
+#define STATUS_RESPONSE         0x16
 
 class XcisMessage
 {
@@ -41,7 +44,15 @@ class XcisMessage
 
     void createCommandPayload( uint8_t command, uint8_t nodeId);
     void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t timestamp);
+    void createDistancePayload( uint8_t command, uint16_t battery, uint16_t value);
+    void createVoltagePayload( uint8_t command, uint16_t battery, uint16_t value);
+    void createStatusPayload(uint8_t command, uint32_t uid, uint8_t deviceType);
+
     void processPulseCounterPayload(pulse_counter &pcm);
+    void processDistancePayload(distance &dist);
+    void processVoltagePayload(voltage &volts);
+
+
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command);
 

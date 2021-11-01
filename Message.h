@@ -2,17 +2,35 @@
 #define Message_h
 
 #include "Arduino.h"
-// Gateway payload
+    // Gateway payload
     struct{
         uint8_t gatewayID;
     } sensor_data_request;
 
-    // Pulse counter payload
+    // Sensor status payload 
+    typedef struct{
+        uint32_t uid;
+        uint8_t  deviceType;
+    } sensor_status;
+
+    // Pulse counter payload for flow meter or rain gauge
     typedef struct{
         uint16_t battery;
         uint16_t value;
         uint32_t timestamp;
     } pulse_counter;
+
+    // Distance Payload for tank or trough
+    typedef struct{
+        uint16_t battery;
+        uint16_t value;
+    } distance;
+
+    // Voltage Payload for electric fence
+    typedef struct{
+        uint16_t battery;
+        uint16_t value;
+    } voltage;
 
 struct Message
 {

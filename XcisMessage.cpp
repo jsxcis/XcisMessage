@@ -40,6 +40,29 @@ void XcisMessage::sayHello()
   */
   return;
 }
+void XcisMessage::createStatusPayload(uint8_t command,uint32_t uid, uint8_t deviceType)
+{
+  Serial.print("XcisMessage::createStatusPayload");
+  sensor_status sts;
+  if (command == STATUS_RESPONSE)
+  {
+    sts.uid = __builtin_bswap32(uid); // Make sure we use byte order swap for 16 and 32 bit values
+    sts.deviceType = deviceType;
+    // now convert to an array
+    this->resetPayload();
+    used = 0;
+    memmove(&payload[used], &sts.uid, sizeof(sts.uid));
+    used += sizeof(sts.uid);
+    memmove(&payload[used], &sts.deviceType, sizeof(sts.deviceType));
+    used += sizeof(sts.deviceType);
+    Serial.print("Payload used:");
+    Serial.println(used);
+  }
+  else
+  {
+    Serial.println("Command not found - sending ZEROs");
+  }
+}
 void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, uint16_t value, uint32_t timestamp )
 {
   Serial.print("XcisMessage::createPulseCounterPayload");
@@ -66,6 +89,52 @@ void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, ui
     Serial.println("Command not found - sending ZEROs");
   }
 }
+void XcisMessage::createDistancePayload(uint8_t command,uint16_t battery, uint16_t value)
+{
+  Serial.print("XcisMessage::createDistancePayload");
+  distance dist;
+  if (command == SENSOR_DATA_RESPONSE)
+  {
+    dist.battery = __builtin_bswap16(battery); // Make sure we use byte order swap for 16 and 32 bit values
+    dist.value = __builtin_bswap16(value);
+    // now convert to an array
+    this->resetPayload();
+    used = 0;
+    memmove(&payload[used], &dist.battery, sizeof(dist.battery));
+    used += sizeof(dist.battery);
+    memmove(&payload[used], &dist.value, sizeof(dist.value));
+    used += sizeof(dist.value);
+    Serial.print("Payload used:");
+    Serial.println(used);
+  }
+  else
+  {
+    Serial.println("Command not found - sending ZEROs");
+  }
+}
+void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_t value)
+{
+  Serial.print("XcisMessage::createVoltagePayload");
+  voltage volts;
+  if (command == SENSOR_DATA_RESPONSE)
+  {
+    volts.battery = __builtin_bswap16(battery); // Make sure we use byte order swap for 16 and 32 bit values
+    volts.value = __builtin_bswap16(value);
+    // now convert to an array
+    this->resetPayload();
+    used = 0;
+    memmove(&payload[used], &volts.battery, sizeof(volts.battery));
+    used += sizeof(volts.battery);
+    memmove(&payload[used], &volts.value, sizeof(volts.value));
+    used += sizeof(volts.value);
+    Serial.print("Payload used:");
+    Serial.println(used);
+  }
+  else
+  {
+    Serial.println("Command not found - sending ZEROs");
+  }
+}
 void XcisMessage::processPulseCounterPayload(pulse_counter &pcm)
  {
        memmove(&pcm,this->payload,sizeof(pulse_counter));
@@ -73,12 +142,34 @@ void XcisMessage::processPulseCounterPayload(pulse_counter &pcm)
        pcm.value = __builtin_bswap16(pcm.value);
        pcm.timestamp = __builtin_bswap32(pcm.timestamp);
  }
+ void XcisMessage::processDistancePayload(distance &dist)
+ {
+       memmove(&dist,this->payload,sizeof(distance));
+       dist.battery =  __builtin_bswap16(dist.battery);
+       dist.value = __builtin_bswap16(dist.value);
+ }
+ void XcisMessage::processVoltagePayload(voltage &volts)
+ {
+       memmove(&volts,this->payload,sizeof(voltage));
+       volts.battery =  __builtin_bswap16(volts.battery);
+       volts.value = __builtin_bswap16(volts.value);
+ }
 void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
 {
   Serial.print("XcisMessage::createCommandPayload");
   this->resetPayload();
   
   if (command == SENSOR_DATA_REQUEST)
+  {
+    sensor_data_request.gatewayID = nodeId;
+    // now convert to an array
+    used = 0;
+    memmove(&payload[used], &sensor_data_request.gatewayID, sizeof(sensor_data_request.gatewayID));
+    used += sizeof(sensor_data_request.gatewayID);
+    Serial.print("Payload used:");
+    Serial.println(used);
+  }
+  if (command == STATUS_REQUEST)
   {
     sensor_data_request.gatewayID = nodeId;
     // now convert to an array
