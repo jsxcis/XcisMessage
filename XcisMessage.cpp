@@ -154,6 +154,11 @@ void XcisMessage::processPulseCounterPayload(pulse_counter &pcm)
        volts.battery =  __builtin_bswap16(volts.battery);
        volts.value = __builtin_bswap16(volts.value);
  }
+ void XcisMessage::processStatusPayload(sensor_status &status)
+ {
+       memmove(&status,this->payload,sizeof(sensor_status));
+       status.uid =  __builtin_bswap32(status.uid);
+ }
 void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
 {
   Serial.print("XcisMessage::createCommandPayload");
@@ -166,18 +171,14 @@ void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
     used = 0;
     memmove(&payload[used], &sensor_data_request.gatewayID, sizeof(sensor_data_request.gatewayID));
     used += sizeof(sensor_data_request.gatewayID);
-    Serial.print("Payload used:");
-    Serial.println(used);
   }
-  if (command == STATUS_REQUEST)
+  else if (command == STATUS_REQUEST)
   {
     sensor_data_request.gatewayID = nodeId;
     // now convert to an array
     used = 0;
     memmove(&payload[used], &sensor_data_request.gatewayID, sizeof(sensor_data_request.gatewayID));
     used += sizeof(sensor_data_request.gatewayID);
-    Serial.print("Payload used:");
-    Serial.println(used);
   }
   else
   {
@@ -237,4 +238,54 @@ void XcisMessage::dumpHex(void *p, size_t size )
     Serial.print(b,HEX);
   }
   Serial.println();
+}
+String XcisMessage::convertDeviceTypeToString(uint8_t deviceType)
+{
+    String device;
+    switch(deviceType)
+    {
+        case RAIN_GAUGE:
+        { 
+            device = "RainGauge"; 
+            break;
+        }
+        case FLOW_METER:
+        { 
+            device = "FlowMeter";
+            break;
+        }
+        case TROUGH:
+        {
+            device = "Trough";
+            break;
+        }
+        case TANK:
+        {
+            device = "Tank";
+            break;
+        }
+        case FENCE:
+        {
+           device = "Fence";
+            break;
+        }
+        case BORE_CONTROLLER:
+        {
+            device = "BoreController";
+            break;
+        }
+        case WEATHER_SENSOR:
+        {
+            device = "WeatherSensor";
+            break;
+        }
+        case GATEWAY:
+        {
+            device = "Gateway";
+            break;
+        }
+        default:
+            device = "NULL";
+    }
+    return device;
 }

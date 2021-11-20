@@ -51,6 +51,7 @@ class XcisMessage
     void processPulseCounterPayload(pulse_counter &pcm);
     void processDistancePayload(distance &dist);
     void processVoltagePayload(voltage &volts);
+    void processStatusPayload(sensor_status &status);
 
 
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);
@@ -63,6 +64,8 @@ class XcisMessage
     inline uint8_t getDeviceType(){return message.getDeviceType();}
     inline uint8_t getCommand(){return message.getCommand();}
     inline void getPayload(uint8_t *data){ memcpy(data, this->payload, 28);}
+
+    String convertDeviceTypeToString(uint8_t deviceType);
 
     uint8_t payload[28];
     uint8_t buffer[32];
