@@ -42,16 +42,21 @@ class XcisMessage
     void sayHello();
     void resetPayload();
 
-    void createCommandPayload( uint8_t command, uint8_t nodeId);
-    void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t timestamp);
+    void createCommandPayload(uint8_t command, uint8_t nodeId);
+    void createCommandPayload(uint8_t command, uint16_t value, uint8_t nodeId);
+
+    void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t accumulatedDataToken);
     void createDistancePayload( uint8_t command, uint16_t battery, uint16_t value);
     void createVoltagePayload( uint8_t command, uint16_t battery, uint16_t value);
+    void createBorePayload( uint8_t command, uint16_t battery, uint16_t currentValue, uint16_t accumulatedPulses, uint32_t accumulatedDataToken, uint8_t boreState);
     void createStatusPayload(uint8_t command, uint32_t uid, uint8_t deviceType);
 
     void processPulseCounterPayload(pulse_counter &pcm);
     void processDistancePayload(distance &dist);
     void processVoltagePayload(voltage &volts);
+    void processBorePayload(boreStatus &status);
     void processStatusPayload(sensor_status &status);
+    void processControlPayload(sensor_control_data &control);
 
 
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);

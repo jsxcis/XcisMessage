@@ -17,7 +17,7 @@
     typedef struct{
         uint16_t battery;
         uint16_t value;
-        uint32_t timestamp;
+        uint32_t accumulatedDataToken;
     } pulse_counter;
 
     // Distance Payload for tank or trough
@@ -31,6 +31,24 @@
         uint16_t battery;
         uint16_t value;
     } voltage;
+    //  Payload for bore controller
+    typedef struct{
+        uint16_t battery;
+        uint16_t currentValue;
+        uint16_t accumulatedPulses;
+        uint32_t accumulatedDataToken;
+        uint8_t boreState;
+    } boreStatus;
+    // Payload for bore controller relays
+    struct{
+        uint8_t gatewayID;
+        uint16_t value;
+    } sensor_control_request;
+    
+    typedef struct{
+        uint8_t gatewayID;
+        uint16_t value;
+    } sensor_control_data;
 
 struct Message
 {
