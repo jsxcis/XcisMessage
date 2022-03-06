@@ -243,7 +243,7 @@ void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
 }
 void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t nodeId)
 {
-  Serial.print("XcisMessage::createCommandPayload");
+  //Serial.print("XcisMessage::createCommandPayload");
   this->resetPayload();
   
   if ((command == CONTROL_ON) || (command == CONTROL_OFF))
@@ -266,7 +266,7 @@ void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t 
 }
 void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata)
 {
-  Serial.println("XcisMessage::createMessage");
+  //Serial.println("XcisMessage::createMessage");
   this->message.setLocationID(locationID);
   this->message.setDeviceType(deviceType);
   this->message.setCommand(command);
@@ -275,7 +275,11 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
   //this->message.setPayload(this->payload,sizeof(this->payload));
   // Can do direct copy provided size is set - ignore internal payload
   this->message.setPayload(paydata,sizeof(paydata));
-  this->message.setCrc(0x45);
+  this->message.setCrc(0x4567);
+  
+  //uint16_t crc = 0x1234;
+  //crc = this->message.ip_checksum(data,sizeof(data));
+  //this->message.setCrc(crc);
   // Convert the message structure into a buffer
   this->message.getBuffer(this->buffer);
   // Copy the buffer into the incoming user buffer
@@ -292,14 +296,18 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
   //this->message.setPayload(this->payload,sizeof(this->payload));
   // Can do direct copy provided size is set - use internal payload set by createPayload by device
   this->message.setPayload(this->payload,sizeof(this->payload));
-  this->message.setCrc(0x45);
+  //this->message.setCrc(0x4567);
+  uint16_t crc = 0x1234;
+  crc = this->message.ip_checksum(this->payload,sizeof(this->payload));
+  this->message.setCrc(crc);
   // Convert the message structure into a buffer
   this->message.getBuffer(this->buffer);
   // Copy the buffer into the incoming user buffer
   memcpy(data, this->buffer, sizeof(buffer));
+  this->message.displayMessage();
 }
 
-void XcisMessage::processMessage(uint8_t *data)
+bool XcisMessage::processMessage(uint8_t *data)
 {
   //Serial.println("XcisMessage::processMessage");
   this->message.processBuffer(data);
@@ -307,6 +315,24 @@ void XcisMessage::processMessage(uint8_t *data)
   this->message.getPayload(this->payload);
   // Payload is stored here - can now process.
   //dumpHex(this->payload,28);
+  uint16_t crc = 0;
+  crc = this->message.ip_checksum(this->payload,sizeof(this->payload));
+  Serial.print("processMessage CRC check:");
+  Serial.println(crc,HEX);
+  uint16_t recv_crc = 1;
+  recv_crc = this->message.getCRC();
+  Serial.print("Message CRC:");
+  Serial.println(this->message.getCRC(),HEX);
+  if (crc == recv_crc)
+  {
+    Serial.println("checksum OK");
+    return true;
+  }
+  else
+  {
+    Serial.println("checksum ERR");
+    return false;
+  }
 }
 
 void XcisMessage::dumpHex(void *p, size_t size )

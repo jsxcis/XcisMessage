@@ -62,17 +62,19 @@ class XcisMessage
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command);
 
-    void processMessage(uint8_t *data);
+    bool processMessage(uint8_t *data);
     void dumpHex(void *p, size_t size);
 
     inline uint8_t getLocationID(){return message.getLocationID();}
     inline uint8_t getDeviceType(){return message.getDeviceType();}
     inline uint8_t getCommand(){return message.getCommand();}
+    inline uint16_t getCRC(){return message.getCRC();}
+
     inline void getPayload(uint8_t *data){ memcpy(data, this->payload, 28);}
 
     String convertDeviceTypeToString(uint8_t deviceType);
 
-    uint8_t payload[28];
+    uint8_t payload[26]; // Was 28
     uint8_t buffer[32];
     Message message;
     size_t used;

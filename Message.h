@@ -63,8 +63,8 @@ struct Message
         uint8_t locationID;
         uint8_t deviceType;
         uint8_t command;
-        uint8_t payload[28];
-        uint8_t crc;
+        uint8_t payload[26];
+        uint16_t crc;
     } mess;
 
 
@@ -85,8 +85,10 @@ struct Message
 
       inline uint8_t getCommand(){return this->mess.command;}
 
-      inline void setCrc(uint8_t nNewValue) {
+      inline void setCrc(uint16_t nNewValue) {
           this -> mess.crc = nNewValue;}
+
+      inline uint16_t getCRC(){return this->mess.crc;}
 
       void setPayload(uint8_t *data,  size_t size );
 
@@ -95,7 +97,7 @@ struct Message
       void getBuffer(uint8_t *buffer);
       void processBuffer(uint8_t *buffer);
 
-      
+      uint16_t ip_checksum(void* vdata,size_t length);
 
 };
 #endif
