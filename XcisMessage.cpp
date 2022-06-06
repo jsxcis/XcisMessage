@@ -42,7 +42,7 @@ void XcisMessage::sayHello()
 }
 void XcisMessage::createStatusPayload(uint8_t command,uint32_t uid, uint8_t deviceType)
 {
-  Serial.print("XcisMessage::createStatusPayload");
+  //Serial.print("XcisMessage::createStatusPayload");
   sensor_status sts;
   if (command == STATUS_RESPONSE)
   {
@@ -55,8 +55,8 @@ void XcisMessage::createStatusPayload(uint8_t command,uint32_t uid, uint8_t devi
     used += sizeof(sts.uid);
     memmove(&payload[used], &sts.deviceType, sizeof(sts.deviceType));
     used += sizeof(sts.deviceType);
-    Serial.print("Payload used:");
-    Serial.println(used);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
   }
   else
   {
@@ -65,7 +65,7 @@ void XcisMessage::createStatusPayload(uint8_t command,uint32_t uid, uint8_t devi
 }
 void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, uint16_t value, uint32_t accumulatedDataToken )
 {
-  Serial.print("XcisMessage::createPulseCounterPayload");
+  //Serial.print("XcisMessage::createPulseCounterPayload");
   pulse_counter pcm;
   if (command == SENSOR_DATA_RESPONSE)
   {
@@ -81,8 +81,8 @@ void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, ui
     used += sizeof(pcm.value);
     memmove(&payload[used], &pcm.accumulatedDataToken, sizeof(pcm.accumulatedDataToken));
     used += sizeof(pcm.accumulatedDataToken);
-    Serial.print("Payload used:");
-    Serial.println(used);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
   }
   else
   {
@@ -91,7 +91,7 @@ void XcisMessage::createPulseCounterPayload(uint8_t command,uint16_t battery, ui
 }
 void XcisMessage::createDistancePayload(uint8_t command,uint16_t battery, uint16_t value)
 {
-  Serial.print("XcisMessage::createDistancePayload");
+  //Serial.print("XcisMessage::createDistancePayload");
   distance dist;
   if (command == SENSOR_DATA_RESPONSE)
   {
@@ -104,8 +104,8 @@ void XcisMessage::createDistancePayload(uint8_t command,uint16_t battery, uint16
     used += sizeof(dist.battery);
     memmove(&payload[used], &dist.value, sizeof(dist.value));
     used += sizeof(dist.value);
-    Serial.print("Payload used:");
-    Serial.println(used);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
   }
   else
   {
@@ -114,7 +114,7 @@ void XcisMessage::createDistancePayload(uint8_t command,uint16_t battery, uint16
 }
 void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_t value)
 {
-  Serial.print("XcisMessage::createVoltagePayload");
+  //Serial.print("XcisMessage::createVoltagePayload");
   voltage volts;
   if (command == SENSOR_DATA_RESPONSE)
   {
@@ -127,8 +127,8 @@ void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_
     used += sizeof(volts.battery);
     memmove(&payload[used], &volts.value, sizeof(volts.value));
     used += sizeof(volts.value);
-    Serial.print("Payload used:");
-    Serial.println(used);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
   }
   else
   {
@@ -137,7 +137,7 @@ void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_
 }
 void XcisMessage::createBorePayload( uint8_t command, uint16_t battery, uint16_t currentValue, uint16_t accumulatedPulses,uint32_t accumulatedDataToken, uint8_t boreState)
 {
-  Serial.print("XcisMessage::createBorePayload");
+  //Serial.print("XcisMessage::createBorePayload");
   boreStatus status;
   if (command == SENSOR_DATA_RESPONSE)
   {
@@ -159,8 +159,8 @@ void XcisMessage::createBorePayload( uint8_t command, uint16_t battery, uint16_t
     used += sizeof(status.accumulatedDataToken);
     memmove(&payload[used], &status.boreState, sizeof(status.boreState));
     used += sizeof(status.boreState);
-    Serial.print("Payload used:");
-    Serial.println(used);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
   }
   else
   {
@@ -207,7 +207,7 @@ void XcisMessage::processBorePayload(boreStatus &status)
  }
 void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
 {
-  Serial.print("XcisMessage::createCommandPayload");
+  //Serial.print("XcisMessage::createCommandPayload");
   this->resetPayload();
   
   if (command == SENSOR_DATA_REQUEST)
@@ -228,13 +228,13 @@ void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
   }
   else if ((command == CONTROL_ON) || (command == CONTROL_OFF))
   {
-    Serial.println("Creating Command Payload");
+    //Serial.println("Creating Command Payload");
     sensor_data_request.gatewayID = nodeId;
     // now convert to an array
     used = 0;
     memmove(&payload[used], &sensor_data_request.gatewayID, sizeof(sensor_data_request.gatewayID));
     used += sizeof(sensor_data_request.gatewayID);
-    Serial.println("Done");
+    //Serial.println("Done");
   }
   else
   {
@@ -248,7 +248,7 @@ void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t 
   
   if ((command == CONTROL_ON) || (command == CONTROL_OFF))
   {
-    Serial.println("Creating Command Payload");
+    //Serial.println("Creating Command Payload");
     sensor_control_request.value = __builtin_bswap16(value);
     sensor_control_request.gatewayID = nodeId;
     // now convert to an array
@@ -257,7 +257,7 @@ void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t 
     used += sizeof(sensor_control_request.gatewayID);
     memmove(&payload[used], &sensor_control_request.value, sizeof(sensor_control_request.value));
     used += sizeof(sensor_control_request.value);
-    Serial.println("Done");
+    //Serial.println("Done");
   }
   else
   {
@@ -287,7 +287,7 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
 }
 void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command)
 {
-  Serial.println("XcisMessage::createMessage");
+  //Serial.println("XcisMessage::createMessage");
   this->message.setLocationID(locationID);
   this->message.setDeviceType(deviceType);
   this->message.setCommand(command);
@@ -304,7 +304,7 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
   this->message.getBuffer(this->buffer);
   // Copy the buffer into the incoming user buffer
   memcpy(data, this->buffer, sizeof(buffer));
-  this->message.displayMessage();
+  //this->message.displayMessage();
 }
 
 bool XcisMessage::processMessage(uint8_t *data)
@@ -317,15 +317,15 @@ bool XcisMessage::processMessage(uint8_t *data)
   //dumpHex(this->payload,28);
   uint16_t crc = 0;
   crc = this->message.ip_checksum(this->payload,sizeof(this->payload));
-  Serial.print("processMessage CRC check:");
-  Serial.println(crc,HEX);
+  //Serial.print("processMessage CRC check:");
+  //Serial.println(crc,HEX);
   uint16_t recv_crc = 1;
   recv_crc = this->message.getCRC();
-  Serial.print("Message CRC:");
-  Serial.println(this->message.getCRC(),HEX);
+  //Serial.print("Message CRC:");
+  //Serial.println(this->message.getCRC(),HEX);
   if (crc == recv_crc)
   {
-    Serial.println("checksum OK");
+    //Serial.println("checksum OK");
     return true;
   }
   else

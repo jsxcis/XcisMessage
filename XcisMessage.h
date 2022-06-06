@@ -15,6 +15,7 @@
 #define FENCE               0x05
 #define FLOW_METER          0x06
 #define GATEWAY             0x07
+#define TEST_MODE           0x07
 
 
 // COMMAND TYPES

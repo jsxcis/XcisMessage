@@ -44,10 +44,10 @@ void Message::getBuffer(uint8_t *buffer)
 
     memmove(&buffer[used], &mess.crc, sizeof(mess.crc));
     used += sizeof(mess.crc);
-    Serial.print("Used:");
-    Serial.println(used);
-    Serial.print("Sizeof mess:");
-    Serial.println(sizeof(mess));
+    //Serial.print("Used:");
+    //Serial.println(used);
+    //Serial.print("Sizeof mess:");
+    //Serial.println(sizeof(mess));
 
 }
 void Message::processBuffer(uint8_t *buffer)
