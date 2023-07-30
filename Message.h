@@ -29,7 +29,8 @@
     // Voltage Payload for electric fence
     typedef struct{
         uint16_t battery;
-        uint16_t value;
+        uint16_t pos_fenceVoltage;
+        uint16_t neg_fenceVoltage;
     } voltage;
     //  Payload for bore controller
     typedef struct{

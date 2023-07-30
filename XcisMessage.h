@@ -49,6 +49,7 @@ class XcisMessage
     void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t accumulatedDataToken);
     void createDistancePayload( uint8_t command, uint16_t battery, uint16_t value);
     void createVoltagePayload( uint8_t command, uint16_t battery, uint16_t value);
+    void createVoltagePayload( uint8_t command, uint16_t battery, uint16_t pos_fenceVoltage, uint16_t neg_fenceVoltage);
     void createBorePayload( uint8_t command, uint16_t battery, uint16_t currentValue, uint16_t accumulatedPulses, uint32_t accumulatedDataToken, uint8_t boreState);
     void createStatusPayload(uint8_t command, uint32_t uid, uint8_t deviceType);
 

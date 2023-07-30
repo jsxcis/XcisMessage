@@ -112,7 +112,7 @@ void XcisMessage::createDistancePayload(uint8_t command,uint16_t battery, uint16
     Serial.println("Command not found - sending ZEROs");
   }
 }
-void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_t value)
+/*void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_t value)
 {
   //Serial.print("XcisMessage::createVoltagePayload");
   voltage volts;
@@ -127,6 +127,35 @@ void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_
     used += sizeof(volts.battery);
     memmove(&payload[used], &volts.value, sizeof(volts.value));
     used += sizeof(volts.value);
+    //Serial.print("Payload used:");
+    //Serial.println(used);
+  }
+  else
+  {
+    Serial.println("Command not found - sending ZEROs");
+  }
+}
+*/
+void XcisMessage::createVoltagePayload(uint8_t command,uint16_t battery, uint16_t pos_fenceVoltage, uint16_t neg_fenceVoltage)
+{
+  //Serial.print("XcisMessage::createVoltagePayload");
+  voltage volts;
+  if (command == SENSOR_DATA_RESPONSE)
+  {
+    volts.battery = __builtin_bswap16(battery); // Make sure we use byte order swap for 16 and 32 bit values
+    volts.pos_fenceVoltage = __builtin_bswap16(pos_fenceVoltage);
+    volts.neg_fenceVoltage = __builtin_bswap16(neg_fenceVoltage);
+    // now convert to an array
+    this->resetPayload();
+    used = 0;
+    memmove(&payload[used], &volts.battery, sizeof(volts.battery));
+    used += sizeof(volts.battery);
+    
+    memmove(&payload[used], &volts.pos_fenceVoltage, sizeof(volts.pos_fenceVoltage));
+    used += sizeof(volts.pos_fenceVoltage);
+
+    memmove(&payload[used], &volts.neg_fenceVoltage, sizeof(volts.neg_fenceVoltage));
+    used += sizeof(volts.neg_fenceVoltage);
     //Serial.print("Payload used:");
     //Serial.println(used);
   }
@@ -185,7 +214,8 @@ void XcisMessage::processPulseCounterPayload(pulse_counter &pcm)
  {
        memmove(&volts,this->payload,sizeof(voltage));
        volts.battery =  __builtin_bswap16(volts.battery);
-       volts.value = __builtin_bswap16(volts.value);
+       volts.pos_fenceVoltage = __builtin_bswap16(volts.pos_fenceVoltage);
+       volts.neg_fenceVoltage = __builtin_bswap16(volts.neg_fenceVoltage);
  }
 void XcisMessage::processBorePayload(boreStatus &status)
  {
@@ -376,7 +406,7 @@ String XcisMessage::convertDeviceTypeToString(uint8_t deviceType)
         }
         case BORE_CONTROLLER:
         {
-            device = "BoreController";
+            device = "Bore";
             break;
         }
         case WEATHER_SENSOR:
