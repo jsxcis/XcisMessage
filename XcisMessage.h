@@ -2,6 +2,7 @@
 #define XcisMessage_h
 
 #include "Arduino.h"
+
 #include "Message.h"
 
 #define XCIS_RH_MESH_MAX_MESSAGE_LEN  32
@@ -16,6 +17,7 @@
 #define FLOW_METER          0x06
 #define GATEWAY             0x07
 #define TEST_MODE           0x07
+#define NEW_DEVICE          0x08
 
 
 // COMMAND TYPES
@@ -45,6 +47,7 @@ class XcisMessage
 
     void createCommandPayload(uint8_t command, uint8_t nodeId);
     void createCommandPayload(uint8_t command, uint16_t value, uint8_t nodeId);
+    void createUpdatePayload(uint8_t command, uint16_t newLoraID,uint16_t deviceUID, uint8_t nodeId);
 
     void createPulseCounterPayload( uint8_t command, uint16_t battery, uint16_t value, uint32_t accumulatedDataToken);
     void createDistancePayload( uint8_t command, uint16_t battery, uint16_t value);
@@ -59,6 +62,7 @@ class XcisMessage
     void processBorePayload(boreStatus &status);
     void processStatusPayload(sensor_status &status);
     void processControlPayload(sensor_control_data &control);
+    void processUpdatePayload(sensor_update_loraID_request &update);
 
 
     void createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata);

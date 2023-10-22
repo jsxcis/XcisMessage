@@ -45,11 +45,18 @@
         uint8_t gatewayID;
         uint16_t value;
     } sensor_control_request;
-    
+     // Payload for bore controller relay
     typedef struct{
         uint8_t gatewayID;
         uint16_t value;
     } sensor_control_data;
+
+    typedef struct{
+        uint8_t gatewayID;
+        uint16_t newLoraID;
+        uint16_t deviceUID;
+    } sensor_update_loraID_request;
+  
 
 struct Message
 {

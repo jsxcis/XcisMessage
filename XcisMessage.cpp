@@ -235,6 +235,13 @@ void XcisMessage::processBorePayload(boreStatus &status)
        memmove(&control,this->payload,sizeof(sensor_control_data));
        control.value =  __builtin_bswap16(control.value);
  }
+ void XcisMessage::processUpdatePayload(sensor_update_loraID_request &update)
+ {
+      memmove(&update,this->payload,sizeof(sensor_update_loraID_request));
+      update.newLoraID = __builtin_bswap16(update.newLoraID);
+      update.deviceUID =  __builtin_bswap16(update.deviceUID);
+       
+ }
 void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
 {
   //Serial.print("XcisMessage::createCommandPayload");
@@ -271,7 +278,7 @@ void XcisMessage::createCommandPayload(uint8_t command,uint8_t nodeId)
     Serial.println("Command not found - sending ZEROs");
   }
 }
-void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t nodeId)
+void XcisMessage::createCommandPayload(uint8_t command, uint16_t value,  uint8_t nodeId)
 {
   //Serial.print("XcisMessage::createCommandPayload");
   this->resetPayload();
@@ -293,6 +300,37 @@ void XcisMessage::createCommandPayload(uint8_t command, uint16_t value, uint8_t 
   {
     Serial.println("Command not found - sending ZEROs");
   }
+}
+void XcisMessage::createUpdatePayload(uint8_t command, uint16_t newLoraID,uint16_t deviceUID, uint8_t nodeId)
+{
+  //Serial.print("XcisMessage::createCommandPayload");
+  this->resetPayload();
+  sensor_update_loraID_request request;
+
+  if (command == SET_SENSOR_LORAID)
+  {
+    //Serial.println("Creating Command Payload");
+    request.newLoraID = __builtin_bswap16(newLoraID);
+    request.deviceUID = __builtin_bswap16(deviceUID);
+    request.gatewayID = nodeId;
+    // now convert to an array
+    used = 0;
+    memmove(&payload[used], &request.gatewayID, sizeof(request.gatewayID));
+    used += sizeof(request.gatewayID);
+
+    memmove(&payload[used], &request.newLoraID, sizeof(request.newLoraID));
+    used += sizeof(request.newLoraID);
+
+    memmove(&payload[used], &request.deviceUID, sizeof(request.deviceUID));
+    used += sizeof(request.deviceUID);
+
+    //Serial.println("Done");
+  }
+  else
+  {
+    Serial.println("Command not found - sending ZEROs");
+  }
+
 }
 void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t deviceType, uint8_t command, uint8_t *paydata)
 {
@@ -334,7 +372,7 @@ void XcisMessage::createMessage(uint8_t *data, uint8_t locationID, uint8_t devic
   this->message.getBuffer(this->buffer);
   // Copy the buffer into the incoming user buffer
   memcpy(data, this->buffer, sizeof(buffer));
-  //this->message.displayMessage();
+  this->message.displayMessage();
 }
 
 bool XcisMessage::processMessage(uint8_t *data)
